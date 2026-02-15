@@ -160,6 +160,6 @@ Use the superuser credentials you created during installation.
 
 ## License
 
-[Add your license here]
+MIT License
 
 
