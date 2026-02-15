@@ -1,0 +1,19 @@
+html {
+    scroll-behavior: smooth;
+}
+.text-gradient {
+    background: linear-gradient(to right, #e879f9, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.dark .text-gradient {
+    background: linear-gradient(to right, #f0abfc, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.bg-purple-gradient {
+    background: linear-gradient(90deg, #6d28d9 0%, #be185d 100%);
+}
+.bg-purple-gradient:hover {
+    background: linear-gradient(90deg, #5b21b6 0%, #9d174d 100%);
+}

@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="pt-24 pb-16 bg-background-light dark:bg-background-dark">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Back Link -->
+        <a href="{% url 'book_detail' book.id %}" class="inline-flex items-center gap-2 text-primary hover:text-pink-600 mb-8 font-medium">
+            <span class="material-icons">arrow_back</span>
+            Back to Book
+        </a>
+
+        <!-- Form Container -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+            
+            <!-- Header -->
+            <div class="mb-8">
+                {% if is_editing %}
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Edit Your Review</h1>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Update your review for <span class="font-semibold text-gray-900 dark:text-white">{{ book.title }}</span>
+                    </p>
+                    {% if review.created_at %}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        Originally posted on {{ review.created_at|date:"M d, Y" }}
+                    </p>
+                    {% endif %}
+                {% else %}
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Write a Review</h1>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Reviewing <span class="font-semibold text-gray-900 dark:text-white">{{ book.title }}</span>
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Form -->
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Title Field -->
+                <div>
+                    <label for="id_title" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        Review Title
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                    <div class="text-red-600 dark:text-red-400 text-sm mt-1">
+                        {{ form.title.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Rating Field with Interactive Stars -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 dark:text-white mb-3">
+                        Rating <span class="text-red-600">*</span>
+                    </label>
+                    
+                    <!-- Hidden input for form submission -->
+                    <input 
+                        type="hidden" 
+                        id="id_rating" 
+                        name="rating" 
+                        value="{{ form.rating.value|default:'' }}"
+                    >
+                    
+                    <!-- Interactive Star Rating -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex gap-2" id="star-rating">
+                            {% for i in "12345" %}
+                            <button
+                                type="button"
+                                data-rating="{{ i }}"
+                                class="star-btn material-icons text-4xl cursor-pointer transition-all duration-200 hover:scale-110"
+                                aria-label="Rate {{ i }} stars"
+                            >star</button>
+                            {% endfor %}
+                        </div>
+                        <span class="text-lg font-semibold text-gray-900 dark:text-white" id="rating-text">
+                            {% if form.rating.value %}
+                                {{ form.rating.value }}/5
+                            {% else %}
+                                Select rating
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    {% if form.rating.errors %}
+                    <div class="text-red-600 dark:text-red-400 text-sm mt-2">
+                        {{ form.rating.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Content Field -->
+                <div>
+                    <label for="id_content" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        Your Review
+                    </label>
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                    <div class="text-red-600 dark:text-red-400 text-sm mt-1">
+                        {{ form.content.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tech Stack Field -->
+                <div>
+                    <label for="id_tech_stack_used" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        Tech Stack Used (Optional)
+                    </label>
+                    {{ form.tech_stack_used }}
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        e.g., "Used this to learn TypeScript", "React tutorial book"
+                    </p>
+                    {% if form.tech_stack_used.errors %}
+                    <div class="text-red-600 dark:text-red-400 text-sm mt-1">
+                        {{ form.tech_stack_used.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recommended Checkbox -->
+                <div class="flex items-center gap-3">
+                    {{ form.is_recommended }}
+                    <label for="id_is_recommended" class="text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                        I recommend this book
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <button 
+                        type="submit"
+                        class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30"
+                    >
+                        {% if is_editing %}
+                            Update Review
+                        {% else %}
+                            Post Review
+                        {% endif %}
+                    </button>
+                    <a 
+                        href="{% url 'book_detail' book.id %}"
+                        class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 text-center"
+                    >
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingInput = document.getElementById('id_rating');
+    const starButtons = document.querySelectorAll('.star-btn');
+    const ratingText = document.getElementById('rating-text');
+    
+    function updateStarDisplay(rating) {
+        starButtons.forEach((btn, index) => {
+            const starValue = index + 1;
+            if (starValue <= rating) {
+                btn.classList.add('text-yellow-400');
+                btn.classList.remove('text-gray-300', 'dark:text-gray-600');
+            } else {
+                btn.classList.remove('text-yellow-400');
+                btn.classList.add('text-gray-300', 'dark:text-gray-600');
+            }
+        });
+    }
+    
+    // Initialize display with current value
+    if (ratingInput.value) {
+        updateStarDisplay(parseInt(ratingInput.value));
+    } else {
+        starButtons.forEach(btn => {
+            btn.classList.add('text-gray-300', 'dark:text-gray-600');
+        });
+    }
+    
+    // Handle star clicks
+    starButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const rating = this.dataset.rating;
+            ratingInput.value = rating;
+            ratingText.textContent = `${rating}/5`;
+            updateStarDisplay(rating);
+        });
+        
+        // Handle hover preview
+        btn.addEventListener('mouseover', function() {
+            const rating = this.dataset.rating;
+            updateStarDisplay(rating);
+        });
+    });
+    
+    // Reset to selected value on mouse leave
+    document.getElementById('star-rating').addEventListener('mouseleave', function() {
+        const currentRating = ratingInput.value;
+        if (currentRating) {
+            updateStarDisplay(parseInt(currentRating));
+        } else {
+            starButtons.forEach(btn => {
+                btn.classList.remove('text-yellow-400');
+                btn.classList.add('text-gray-300', 'dark:text-gray-600');
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

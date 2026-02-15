@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="pt-24 pb-16 bg-background-light dark:bg-background-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="mb-12">
+            <div class="flex items-center gap-4 mb-4">
+                <a href="{% url 'home' %}" class="text-primary hover:text-pink-500 transition-colors flex items-center gap-1">
+                    <span class="material-icons text-lg">arrow_back</span>
+                    Home
+                </a>
+                <span class="text-gray-400">/</span>
+                <span class="text-gray-600 dark:text-gray-400">{{ category.category_name }}</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                {{ category.category_name }}
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+                Discover {{ books.count }} book{{ books.count|pluralize }} in this category
+            </p>
+        </div>
+
+        <!-- Books Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for book in books %}
+            <a
+                href="{% url 'book_detail' book.slug %}"
+                class="group relative rounded-2xl overflow-hidden bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl"
+            >
+                <div
+                    class="aspect-[3/4] sm:aspect-[4/3] bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-900/30 dark:to-indigo-900/30 relative overflow-hidden group"
+                >
+                    {% if book.categories.exists %}
+                    <div class="absolute top-4 left-4 z-10">
+                        <span
+                            class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md"
+                            >{{ book.categories.first.category_name }}</span
+                        >
+                    </div>
+                    {% endif %}
+                    {% if book.cover_image %}
+                    <img 
+                        src="{{ book.cover_image.url }}" 
+                        alt="{{ book.title }}" 
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    >
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="material-icons text-6xl text-gray-300 dark:text-gray-600">book</span>
+                    </div>
+                    {% endif %}
+                    <div
+                        class="absolute top-0 left-0 w-32 h-32 bg-white/20 dark:bg-white/5 rounded-full blur-2xl -translate-x-10 -translate-y-10 pointer-events-none"
+                    ></div>
+                </div>
+                <div class="p-6">
+                    <h3
+                        class="text-xl font-bold text-gray-800 dark:text-white mb-1 line-clamp-2 hover:text-primary transition-colors"
+                    >
+                        {{ book.title }}
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                        {% for author in book.authors.all %}{{ author.author_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </p>
+                    <div class="flex items-center justify-between mb-4">
+                        <!-- Rating Stars -->
+                        {% if book.reviews.all %}
+                            {% with avg_rating=book.reviews.all|dictsort:"rating"|last %}
+                                {% if avg_rating %}
+                                <div class="flex items-center gap-2">
+                                    <div class="flex gap-0.5 text-yellow-400">
+                                        {% for i in "12345" %}
+                                        <span class="material-icons text-base {% if forloop.counter <= avg_rating.rating %}text-yellow-400{% else %}text-gray-300 dark:text-gray-600{% endif %}">star</span>
+                                        {% endfor %}
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-900 dark:text-white">{{ avg_rating.rating }}/5</span>
+                                </div>
+                                {% else %}
+                                <span class="text-xs text-gray-500 dark:text-gray-400">No ratings yet</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                        <span class="text-xs text-gray-500 dark:text-gray-400">No ratings yet</span>
+                        {% endif %}
+                        <span class="text-sm text-gray-500 font-medium"
+                            >{{ book.get_difficulty_display }}</span
+                        >
+                    </div>
+                    <p
+                        class="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4"
+                    >
+                        {{ book.description }}
+                    </p>
+                    <span
+                        class="inline-flex items-center text-primary font-semibold group-hover:text-pink-500 transition-colors"
+                    >
+                        Read More
+                        <span class="material-icons text-sm ml-1"
+                            >arrow_forward</span
+                        >
+                    </span>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <span class="material-icons text-6xl text-gray-300 dark:text-gray-600 block mb-4">book</span>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">No books in this category yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    /* Hide the About nav item on the about page */
+    #navbar-sticky li:nth-child(4) {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="flex-grow">
+    <section class="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[100px]"
+            ></div>
+            <div
+                class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[120px]"
+            ></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex justify-center">
+            <div class="space-y-8 max-w-2xl text-center">
+                <h1
+                    class="text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-[1.1]"
+                >
+                    Building the <br />
+                    <span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-primary"
+                        >Future</span
+                    >
+                    <br />
+                    of Tech Reading
+                </h1>
+                <div
+                    class="space-y-6 text-lg text-gray-600 dark:text-gray-400 max-w-lg leading-relaxed"
+                >
+                    <p>
+                        Devread was founded with a simple mission: to help
+                        developers discover books that truly matter to their
+                        growth and career advancement. We believe that the
+                        right book at the right time can transform a
+                        developer's trajectory.
+                    </p>
+                    <p>
+                        Our platform combines community-driven reviews with
+                        expert curation to surface the most valuable
+                        technical books in an ocean of content. Every
+                        recommendation is backed by developers who have
+                        actually read and applied what they've learned.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2
+                    class="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl"
+                >
+                    Our Philosophy
+                </h2>
+                <p class="mt-4 text-gray-600 dark:text-gray-300">
+                    What drives us to build the best platform for developers.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary/50 transition-colors group"
+                >
+                    <h3
+                        class="text-xl font-bold text-gray-900 dark:text-gray-50 mb-3"
+                    >
+                        Our Mission
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        To reduce the noise in tech education and ensure every
+                        developer finds the exact knowledge they need to level
+                        up.
+                    </p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary/50 transition-colors group"
+                >
+                    <h3
+                        class="text-xl font-bold text-gray-900 dark:text-gray-50 mb-3"
+                    >
+                        Community First
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        We trust the collective wisdom of developers. No paid
+                        placements, just honest reviews from people who code.
+                    </p>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-primary/50 transition-colors group"
+                >
+                    <h3
+                        class="text-xl font-bold text-gray-900 dark:text-gray-50 mb-3"
+                    >
+                        Expert Curation
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                        We partner with industry veterans to curate reading
+                        lists for specific career paths, from Junior to CTO.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
